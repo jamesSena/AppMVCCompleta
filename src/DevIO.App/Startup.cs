@@ -37,17 +37,21 @@ namespace DevIO.App
             });
 
             services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(
+                options.UseOracle(
                     Configuration.GetConnectionString("DefaultConnection")));
+          
+
+
 
             services.AddDbContext<MyDbContext>(options =>
-             options.UseSqlServer(
-                 Configuration.GetConnectionString("DefaultConnection")));
+             options.UseOracle(
+                 Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DevIO.App")));
+
+
 
             services.AddDefaultIdentity<IdentityUser>()
-                .AddDefaultUI(UIFramework.Bootstrap4)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
+        .AddDefaultUI(UIFramework.Bootstrap4)
+        .AddEntityFrameworkStores<MyDbContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
