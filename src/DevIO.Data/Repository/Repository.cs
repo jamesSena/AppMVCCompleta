@@ -16,15 +16,17 @@ namespace DevIO.Data.Repository
         protected readonly MyDbContext _db;
         protected readonly DbSet<TJames> _dbSet;
 
-        public async Task Adicionar(TJames entity)
+        public virtual async Task Adicionar(TJames entity)
         {
             _dbSet.Add(entity);
             await SaveChanges();
         }
 
-        public async Task Atualizar(TJames entity)
+        public virtual async Task Atualizar(TJames entity)
         {
-            throw  new NotImplementedException();
+            _dbSet.Update(entity);
+            await SaveChanges();
+
         }
 
         public async Task<IEnumerable<TJames>> Buscar(Expression<Func<TJames, bool>> predicate)
@@ -33,18 +35,19 @@ namespace DevIO.Data.Repository
         }
 
 
-        public async Task<List<TJames>> ObterAll()
+        public virtual async Task<List<TJames>> ObterAll()
         {
             return await _dbSet.ToListAsync();
         }
 
-        public async Task<TJames> ObterPorId(Guid id)
+        public virtual async Task<TJames> ObterPorId(Guid id)
         {
             return await _dbSet.FindAsync(id);
         }
 
-        public async Task Remover(Guid id)
+        public virtual async Task Remover(Guid id)
         {
+            new TJames();
             // _dbSet.Remove(await ObterPorId(id)); //Tem que buscar no banco :(
             _dbSet.Remove(new TJames { ID = id }); // Sem buscar no banco \o/
             await SaveChanges();
