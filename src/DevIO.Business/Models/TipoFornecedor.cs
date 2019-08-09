@@ -1,4 +1,4 @@
-﻿namespace AppMVC.Models
+﻿namespace DevIO.Business.Models
 {
     public enum TipoFornecedor
     {

@@ -14,7 +14,7 @@ using DevIO.App.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DevIO.Data.Context;
-using AppMVC.Models;
+using DevIO.Business.Models;
 using DevIO.Business.Interfaces;
 using DevIO.Data.Repository;
 
