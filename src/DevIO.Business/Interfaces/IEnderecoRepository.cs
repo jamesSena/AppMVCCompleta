@@ -8,6 +8,6 @@ namespace DevIO.Business.Interfaces
 {
     public interface IEnderecoRepository : IRepository<Endereco>
     {
-        Task<IEnumerable<Endereco>> ObterEnderecoPorFornecedor(Guid fornecedorId);
+        Task<Endereco> ObterEnderecoPorFornecedor(Guid fornecedorId);
     }
 }

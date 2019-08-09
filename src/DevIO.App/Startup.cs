@@ -14,6 +14,9 @@ using DevIO.App.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using DevIO.Data.Context;
+using AppMVC.Models;
+using DevIO.Business.Interfaces;
+using DevIO.Data.Repository;
 
 namespace DevIO.App
 {
@@ -53,6 +56,13 @@ namespace DevIO.App
         .AddDefaultUI(UIFramework.Bootstrap4)
         .AddEntityFrameworkStores<MyDbContext>();
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
+            services.AddScoped<MyDbContext>();
+            services.AddScoped<IProdutoRepository, ProdutoRepository>();
+            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
+            services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
