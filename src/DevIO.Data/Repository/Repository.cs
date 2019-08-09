@@ -16,6 +16,12 @@ namespace DevIO.Data.Repository
         protected readonly MyDbContext _db;
         protected readonly DbSet<TJames> _dbSet;
 
+        public Repository(MyDbContext db)
+        {
+            _db = db;
+            _dbSet = _db.Set<TJames>();
+        }
+
         public virtual async Task Adicionar(TJames entity)
         {
             _dbSet.Add(entity);
