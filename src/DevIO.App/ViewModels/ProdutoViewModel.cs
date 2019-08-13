@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using DevIO.Business.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,6 +13,9 @@ namespace DevIO.App.ViewModels
     {
         [Key]
         public Guid ID { get; set; }
+        public Guid FornecedorID { get; set; }
+        public Fornecedor Fornecedor { get; set; }
+
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(200, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 3)]
         public string Nome { get; set; }
@@ -20,7 +24,7 @@ namespace DevIO.App.ViewModels
         public string Descricao { get; set; }
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         [StringLength(200, ErrorMessage = "O campo {0} precisa ter entre {2} e {1} caracteres", MinimumLength = 3)]
-        public IFormFile ImagemUpload { get; set; }
+       // public IFormFile ImagemUpload { get; set; }
         public string Imagem { get; set; }
         [Required(ErrorMessage = "O campo {0} é obrigatório")]
         public decimal Valor { get; set; }
