@@ -1,0 +1,3 @@
+add-migration "Adicionando novos campos" -context MyDbContext -Verbose
+
+Update-Database -context MyDbContext 
