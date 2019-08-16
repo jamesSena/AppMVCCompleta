@@ -78,9 +78,15 @@ namespace DevIO.App.Controllers
 
         public async Task<IActionResult> Edit(Guid id)
         {
-            var produtoViewModel = await ObterFornecedorProdutosEndereco(id);
+            var produtoViewModel = await ObterProduto(id);
             if (produtoViewModel == null) return NotFound();
             return View(produtoViewModel);
+        }
+        private async Task<ProdutoViewModel> ObterProduto(Guid id)
+        {
+            var produto = _mapper.Map<ProdutoViewModel>(await _produtoRepository.ObterProdutoFornecedor(id));
+            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterAll());
+            return produto;
         }
 
         [HttpPost]
@@ -92,7 +98,7 @@ namespace DevIO.App.Controllers
             if (!ModelState.IsValid) return View(produtoViewModel);
             var produto = _mapper.Map<Produto>(produtoViewModel);
             await _produtoRepository.Atualizar(produto);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
         }
 
         public async Task<IActionResult> Delete(Guid id)
