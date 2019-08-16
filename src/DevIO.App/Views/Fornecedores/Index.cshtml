@@ -1,16 +1,18 @@
-﻿@model IEnumerable<DevIO.App.ViewModels.FornecedorViewModel>
+﻿@using DevIO.App.Extensions
+@model IEnumerable<DevIO.App.ViewModels.FornecedorViewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Lista de Fornecedores";
 }
 
-<h1>Index</h1>
+<h1>@ViewData["Title"]</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
+<p supress-by-claim-name="Fornecedor" supress-by-claim-value="Adicionar">
+    <a class="btn btn-info" asp-action="Create">Novo Fornecedor</a>
 </p>
-<table class="table">
-    <thead>
+
+<table class="table table-hover">
+    <thead class="thead-dark">
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.Nome)
@@ -19,35 +21,30 @@
                 @Html.DisplayNameFor(model => model.Documento)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.TipoFornecedor)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.Ativo)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Documento)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TipoFornecedor)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ativo)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nome)
+                </td>
+                <td>
+                    @this.FormataDocumento(item.TipoFornecedor, item.Documento)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Ativo)
+                </td>
+                <td class="text-right">
+                    <a class="btn btn-info" asp-action="Details" asp-route-id="@item.ID"><spam class="fa fa-search"></spam></a>
+                    <a class="btn btn-warning" supress-by-claim-name="Fornecedor" supress-by-claim-value="Editar" asp-action="Edit" asp-route-id="@item.ID"><spam class="fa fa-pencil-alt"></spam></a>
+                    <a class="btn btn-danger" supress-by-claim-name="Fornecedor" supress-by-claim-value="Excluir"  asp-action="Delete" asp-route-id="@item.ID"><spam class="fa fa-trash"></spam></a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
