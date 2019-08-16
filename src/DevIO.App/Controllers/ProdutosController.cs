@@ -16,10 +16,13 @@ namespace DevIO.App.Controllers
     public class ProdutosController : BaseController
     {
         private readonly IProdutoRepository _produtoRepository;
+        private readonly IFornecedorRepository _fornecedorRepository;
+
         private readonly IMapper _mapper;
 
-        public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper)
+        public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper, IFornecedorRepository fornecedorRepository)
         {
+            _fornecedorRepository = fornecedorRepository;
             _produtoRepository = produtoRepository;
             _mapper = mapper;
         }
@@ -40,10 +43,20 @@ namespace DevIO.App.Controllers
             return View(produtoViewModel);
         }
 
-        public IActionResult Create()
+        [Route("novo-produto")]
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var produtoViewModel = await PopularFornecedores(new ProdutoViewModel());
+
+            return View(produtoViewModel);
         }
+
+        private async Task<ProdutoViewModel> PopularFornecedores(ProdutoViewModel produto)
+        {
+            produto.Fornecedores = _mapper.Map<IEnumerable<FornecedorViewModel>>(await _fornecedorRepository.ObterAll());
+            return produto;
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -53,7 +66,7 @@ namespace DevIO.App.Controllers
 
             var produto = _mapper.Map<Produto>(produtoViewModel);
             await _produtoRepository.Adicionar(produto);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction("Index");
 
         }
 
@@ -61,7 +74,7 @@ namespace DevIO.App.Controllers
         {
             var produtoViewModel = await ObterFornecedorProdutosEndereco(id);
             if (produtoViewModel == null) return NotFound();
-            return View(nameof(Index));
+            return View(produtoViewModel);
         }
 
         [HttpPost]
