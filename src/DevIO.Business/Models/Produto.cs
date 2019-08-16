@@ -9,7 +9,7 @@ namespace DevIO.Business.Models
 {
     public class Produto : Entity
     {
-        public Guid FornecedorId { get; set; }
+        public Guid FornecedorID { get; set; }
         public Fornecedor Fornecedor { get; set; }
         public string Nome { get; set; }
         public string Descricao { get; set; }

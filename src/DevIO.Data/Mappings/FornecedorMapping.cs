@@ -27,7 +27,7 @@ namespace DevIO.Data.Mappings
             //1 : N => 1 Fornecedor - N Produtos
             mapping.HasMany(f => f.Produtos)
                 .WithOne(p => p.Fornecedor)
-                .HasForeignKey(p => p.FornecedorId) ;
+                .HasForeignKey(p => p.FornecedorID) ;
         }
     }
 }

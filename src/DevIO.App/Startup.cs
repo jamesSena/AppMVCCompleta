@@ -18,6 +18,10 @@ using DevIO.Business.Models;
 using DevIO.Business.Interfaces;
 using DevIO.Data.Repository;
 using AutoMapper;
+using DevIO.App.Controllers;
+using DevIO.App.Interfaces;
+using DevIO.Business.Services;
+using DevIO.Business.Notificacoes;
 
 namespace DevIO.App
 {
@@ -65,6 +69,9 @@ namespace DevIO.App
             services.AddScoped<IProdutoRepository, ProdutoRepository>();
             services.AddScoped<IEnderecoRepository, EnderecoRepository>();
             services.AddScoped<IFornecedorRepository, FornecedorRepository>();
+            services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<INotificador, Notificador>();
+
 
         }
 
