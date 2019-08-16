@@ -21,9 +21,12 @@
         "webfonts/fa-solid-900.svg",
         "webfonts/fa-solid-900.ttf",
         "webfonts/fa-solid-900.woff",
-        "webfonts/fa-solid-900.woff2",
-        "js/all.min.js"
+        "webfonts/fa-solid-900.woff2"
       ]
+    },
+    {
+      "library": "font-awesome@5.9.0",
+      "destination": "wwwroot/lib/font-awesome/"
     }
   ]
 }

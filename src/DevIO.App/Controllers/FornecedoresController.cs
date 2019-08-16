@@ -61,7 +61,7 @@ namespace DevIO.App.Controllers
         {
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
             if (fornecedorViewModel == null) return NotFound();
-            return View(nameof(Index)); 
+            return View(fornecedorViewModel);
         }
 
         [HttpPost]
