@@ -16,10 +16,15 @@ namespace DevIO.App.Controllers
 
     public class FornecedoresController : BaseController
     {
+        private readonly IProdutoRepository _produtoRepository;
         private readonly IFornecedorRepository _fornecedorRepository;
+        private readonly IEnderecoRepository _enderecoRepository;
+
         private readonly IMapper _mapper;
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IEnderecoRepository  enderecoRepository, IProdutoRepository produtoRepository)
         {
+            _produtoRepository = produtoRepository;
+            _enderecoRepository = enderecoRepository;
             _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
         }
@@ -94,6 +99,14 @@ namespace DevIO.App.Controllers
         {
             var fornecedorViewModel = await ObterFornecedorProdutosEndereco(id);
             if (fornecedorViewModel == null) return NotFound();
+            Endereco end =  await _enderecoRepository.ObterEnderecoPorFornecedor(id);
+            if(end != null)
+            await _enderecoRepository.Remover(end.ID);
+            IEnumerable<Produto> produtos = await _produtoRepository.ObterProdutosPorFornecedor(id);
+
+
+            produtos.ToList().ForEach(p => _produtoRepository.Remover(p.ID));
+
             await _fornecedorRepository.Remover(id);
             return RedirectToAction(nameof(Index));
         }
