@@ -99,18 +99,20 @@ namespace DevIO.App.Controllers
             return View(fornecedorViewModel);
         }
 
+        [Route("editar-fornecedor/{id:guid}")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(Guid id,FornecedorViewModel fornecedorViewModel)
+        public async Task<IActionResult> Edit(Guid id, FornecedorViewModel fornecedorViewModel)
         {
             if (id != fornecedorViewModel.ID) return NotFound();
 
             if (!ModelState.IsValid) return View(fornecedorViewModel);
+
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorRepository.Atualizar(fornecedor);
-            return RedirectToAction(nameof(Index));
-        }
 
+
+            return RedirectToAction("Index");
+        }
         public async Task<IActionResult> Delete(Guid id)
         {
 
