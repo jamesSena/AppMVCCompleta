@@ -22,6 +22,7 @@ using DevIO.App.Controllers;
 using DevIO.App.Interfaces;
 using DevIO.Business.Services;
 using DevIO.Business.Notificacoes;
+using DevIO.App.Configurations;
 
 namespace DevIO.App
 {
@@ -36,56 +37,16 @@ namespace DevIO.App
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.Configure<CookiePolicyOptions>(options =>
-            {
-                options.CheckConsentNeeded = context => true;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
-            });
-
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseOracle(
-                    Configuration.GetConnectionString("DefaultConnection")));
-          
-
-
+            services.AddIdentityConfiguration(Configuration);
 
             services.AddDbContext<MyDbContext>(options =>
-             options.UseOracle(
-                 Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("DevIO.App")));
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
+            services.AddAutoMapper(typeof(Startup));
 
-            services.AddAutoMapper(typeof(Startup));//AutoMapperConfig
-            services.AddDefaultIdentity<IdentityUser>()
-        .AddDefaultUI(UIFramework.Bootstrap4)
-        .AddEntityFrameworkStores<MyDbContext>();
+            services.AddMvcConfiguration();
 
-
-
-
-            services.AddMvc(o =>
-            {
-                o.ModelBindingMessageProvider.SetAttemptedValueIsInvalidAccessor((x, y) => "O valor preenchido é inválido para este campo.");
-                o.ModelBindingMessageProvider.SetMissingBindRequiredValueAccessor(x => "Este campo precisa ser preenchido.");
-                o.ModelBindingMessageProvider.SetMissingKeyOrValueAccessor(() => "Este campo precisa ser preenchido.");
-                o.ModelBindingMessageProvider.SetMissingRequestBodyRequiredValueAccessor(() => "É necessário que o body na requisição não esteja vazio.");
-                o.ModelBindingMessageProvider.SetNonPropertyAttemptedValueIsInvalidAccessor(x => "O valor preenchido é inválido para este campo.");
-                o.ModelBindingMessageProvider.SetNonPropertyUnknownValueIsInvalidAccessor(() => "O valor preenchido é inválido para este campo.");
-                o.ModelBindingMessageProvider.SetNonPropertyValueMustBeANumberAccessor(() => "O campo deve ser numérico");
-                o.ModelBindingMessageProvider.SetUnknownValueIsInvalidAccessor(x => "O valor preenchido é inválido para este campo.");
-                o.ModelBindingMessageProvider.SetValueIsInvalidAccessor(x => "O valor preenchido é inválido para este campo.");
-                o.ModelBindingMessageProvider.SetValueMustBeANumberAccessor(x => "O campo deve ser numérico.");
-                o.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(x => "Este campo precisa ser preenchido.");
-
-                o.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-
-            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-
-            services.AddScoped<MyDbContext>();
-            services.AddScoped<IProdutoRepository, ProdutoRepository>();
-            services.AddScoped<IEnderecoRepository, EnderecoRepository>();
-            services.AddScoped<IFornecedorRepository, FornecedorRepository>();
-            services.AddScoped<IProdutoService, ProdutoService>();
-            services.AddScoped<INotificador, Notificador>();
+            services.ResolveDependencies();
 
 
         }
@@ -100,8 +61,8 @@ namespace DevIO.App
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseExceptionHandler("/erro/500");
+                app.UseStatusCodePagesWithRedirects("/erro/{0}");
                 app.UseHsts();
             }
 
@@ -110,6 +71,8 @@ namespace DevIO.App
             app.UseCookiePolicy();
 
             app.UseAuthentication();
+
+            app.UseGlobalizationConfig();
 
             app.UseMvc(routes =>
             {
