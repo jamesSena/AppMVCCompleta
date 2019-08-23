@@ -13,7 +13,7 @@ using DevIO.Business.Models;
 
 namespace DevIO.App.Controllers
 {
-
+    [Route("admin-fornecedores")]
     public class FornecedoresController : BaseController
     {
         private readonly IProdutoRepository _produtoRepository;
@@ -21,6 +21,7 @@ namespace DevIO.App.Controllers
         private readonly IEnderecoRepository _enderecoRepository;
 
         private readonly IMapper _mapper;
+
         public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IEnderecoRepository  enderecoRepository, IProdutoRepository produtoRepository)
         {
             _produtoRepository = produtoRepository;
@@ -28,12 +29,13 @@ namespace DevIO.App.Controllers
             _fornecedorRepository = fornecedorRepository;
             _mapper = mapper;
         }
-
+        [Route("lista-de-fornecedores")]
         public async Task<IActionResult> Index()
         {
             return View(_mapper.Map<IEnumerable<FornecedorViewModel>>( await _fornecedorRepository.ObterAll()));
         }
 
+        [Route("dados-de-fornecedor/{id:guid}")]
         public async Task<IActionResult> Details(Guid id)
         {
             var fornecedorViewModel = await ObterFornecedorEndereco(id);
@@ -44,7 +46,7 @@ namespace DevIO.App.Controllers
 
             return View(fornecedorViewModel);
         }
-
+        [Route("novo-fornecedor")]
         public IActionResult Create()
         {
             return View();
@@ -79,6 +81,7 @@ namespace DevIO.App.Controllers
             return Json(new { success = true, url });
         }
 
+        [Route("novo-fornecedor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FornecedorViewModel fornecedorViewModel)
@@ -113,6 +116,7 @@ namespace DevIO.App.Controllers
 
             return RedirectToAction("Index");
         }
+        [Route("excluir-fornecedor/{id:guid}")]
         public async Task<IActionResult> Delete(Guid id)
         {
 
@@ -125,6 +129,7 @@ namespace DevIO.App.Controllers
 
             return View(fornecedorViewModel);
         }
+        [Route("excluir-fornecedor/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
