@@ -22,7 +22,8 @@ namespace DevIO.App.Controllers
 
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IEnderecoRepository  enderecoRepository, IProdutoRepository produtoRepository)
+        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IEnderecoRepository  enderecoRepository, IProdutoRepository produtoRepository, INotificador notificador)
+            : base(notificador)
         {
             _produtoRepository = produtoRepository;
             _enderecoRepository = enderecoRepository;
@@ -86,12 +87,14 @@ namespace DevIO.App.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FornecedorViewModel fornecedorViewModel)
         {
+            ModelState.Remove("Documento");
             if (!ModelState.IsValid) return View(fornecedorViewModel);
 
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
             await _fornecedorRepository.Adicionar(fornecedor);
-            return RedirectToAction(nameof(Index));
+            if (!OperacaoValida()) return View(fornecedorViewModel);
 
+            return RedirectToAction("Index");
         }
 
         [Route("editar-fornecedor/{id:guid}")]
@@ -145,6 +148,7 @@ namespace DevIO.App.Controllers
             produtos.ToList().ForEach(p => _produtoRepository.Remover(p.ID));
 
             await _fornecedorRepository.Remover(id);
+
             return RedirectToAction(nameof(Index));
         }
 

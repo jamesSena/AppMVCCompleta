@@ -20,7 +20,7 @@ namespace DevIO.Business.Models.Validations
                     .WithMessage("O documento fornecido é inválido.");
             });
 
-            When(f => f.TipoFornecedor == TipoFornecedor.PessoaJuridica, () =>
+            When(f => f.TipoFornecedor == TipoFornecedor.PessoaJuritica, () =>
             {
                 RuleFor(f => f.Documento.Length).Equal(CnpjValidacao.TamanhoCnpj)
                     .WithMessage("O campo Documento precisa ter {ComparisonValue} caracteres e foi fornecido {PropertyValue}.");

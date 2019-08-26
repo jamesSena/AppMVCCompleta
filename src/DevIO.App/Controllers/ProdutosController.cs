@@ -24,7 +24,8 @@ namespace DevIO.App.Controllers
 
         private readonly IMapper _mapper;
 
-        public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper, IFornecedorRepository fornecedorRepository, IProdutoService produtoService)
+        public ProdutosController(IProdutoRepository produtoRepository, IMapper mapper, IFornecedorRepository fornecedorRepository, IProdutoService produtoService, INotificador notificador)
+            : base(notificador)
         {
             _produtoService = produtoService;
             _fornecedorRepository = fornecedorRepository;
@@ -127,24 +128,33 @@ namespace DevIO.App.Controllers
         public async Task<IActionResult> Delete(Guid id)
         {
 
-            var produtoViewModel = await ObterFornecedorProdutosEndereco(id);
-            if (produtoViewModel == null) return NotFound();
-            if (produtoViewModel == null)
+            var produto = await ObterProduto(id);
+            if (produto == null)
             {
                 return NotFound();
             }
 
-            return View(produtoViewModel);
+            return View(produto);
         }
         [Route("excluir-produto/{id:guid}")]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(Guid id)
         {
-            var produtoViewModel = await ObterFornecedorProdutosEndereco(id);
-            if (produtoViewModel == null) return NotFound();
-            await _produtoRepository.Remover(id);
-            return RedirectToAction(nameof(Index));
+            var produto = await ObterProduto(id);
+
+            if (produto == null)
+            {
+                return NotFound();
+            }
+
+            await _produtoService.Remover(id);
+
+            if (!OperacaoValida()) return View(produto);
+
+            TempData["Sucesso"] = "Produto excluido com sucesso!";
+
+            return RedirectToAction("Index");
         }
 
 
