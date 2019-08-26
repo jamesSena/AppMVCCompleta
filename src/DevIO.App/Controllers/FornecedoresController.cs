@@ -20,11 +20,14 @@ namespace DevIO.App.Controllers
         private readonly IFornecedorRepository _fornecedorRepository;
         private readonly IEnderecoRepository _enderecoRepository;
 
+        private readonly IFornecedorService _fornecedorService;
+
         private readonly IMapper _mapper;
 
-        public FornecedoresController(IFornecedorRepository fornecedorRepository, IMapper mapper, IEnderecoRepository  enderecoRepository, IProdutoRepository produtoRepository, INotificador notificador)
+        public FornecedoresController(IFornecedorService fornecedorService, IFornecedorRepository fornecedorRepository, IMapper mapper, IEnderecoRepository  enderecoRepository, IProdutoRepository produtoRepository, INotificador notificador)
             : base(notificador)
         {
+            _fornecedorService = fornecedorService;
             _produtoRepository = produtoRepository;
             _enderecoRepository = enderecoRepository;
             _fornecedorRepository = fornecedorRepository;
@@ -91,7 +94,8 @@ namespace DevIO.App.Controllers
             if (!ModelState.IsValid) return View(fornecedorViewModel);
 
             var fornecedor = _mapper.Map<Fornecedor>(fornecedorViewModel);
-            await _fornecedorRepository.Adicionar(fornecedor);
+
+            await _fornecedorService.Adicionar(fornecedor);
             if (!OperacaoValida()) return View(fornecedorViewModel);
 
             return RedirectToAction("Index");

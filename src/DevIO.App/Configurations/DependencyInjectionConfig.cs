@@ -1,5 +1,6 @@
 ﻿using DevIO.App.Interfaces;
 using DevIO.Business.Interfaces;
+using DevIO.Business.Models;
 using DevIO.Business.Notificacoes;
 using DevIO.Business.Services;
 using DevIO.Data.Context;
@@ -23,6 +24,7 @@ namespace DevIO.App.Configurations
 
             services.AddScoped<INotificador, Notificador>();
             services.AddScoped<IProdutoService, ProdutoService>();
+            services.AddScoped<IFornecedorService, FonercedorService>();
 
             return services;
         }
